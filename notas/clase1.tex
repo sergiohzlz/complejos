@@ -1,0 +1,360 @@
+\documentclass{report}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{algorithmicx}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\newcommand{\pythonprompt}{\textgreater\textgreater\textgreater}
+\lstset{numbers=left}
+\title{El lenguaje Python}
+\author{Sergio Hernández}
+\date{}
+\begin{document}
+\maketitle
+
+En esta sesión se revisarán los aspectos computacionales más básicos de Python y
+por qué es la decisión de una clase de sistemas complejos usarlo. 
+
+Dentro de los detalles técnicos se verán aspectos fundamentales de 
+los lenguajes de programación particularmente apliados a Python como
+la asignación de variables, la definición de funciones, el funcionamiento
+del {\tt{for}} y el funcionamiento del {\tt{if}}.
+
+\section{Python y otros lenguajes}
+
+Python es un lenguaje de varios paradigmas, entre ellos es un lenguaje 
+interpretado, orientado a objetos y funcional. Otro aspecto 
+importante de Python es que es un lenguaje de alto nivel \cite{wikipython, 
+httlcs}
+
+Este, como otros lenguajes de computación, son {\it{Turing completos}} lo que
+significa que todos ellos pertenecen a una clase de equivalencia en la que todas
+las funciones que puede computar uno, la puede computar cualquier otro lenguaje
+que comparte esta clasificación. O sea, Python puede computar lo mismo que C o
+que Java o que el juego de la vida, entonces ¿por qué usar Python sobre otro 
+lenguaje?
+
+Hay dos razones para esto. La primera es que es su popularidad ha alcanzado una
+masa crítica de desarrolladores los cuales conforman una comunidad bastante 
+madura a la que se le pueden consultar problemas muy particulares, muchos de
+ellos son de tipo científico. 
+
+Otra razón que puede ser una explicación para la popularidad antes mencionada
+es la filosofía detrás de Python. El contraste sobre otros lenguajes es que el 
+código hecho en Python debe ser legible y sencillo, sin embargo no lacónico
+y enmarañado como lo es el {\it{código espagueti}}\footnote{\url{https://en.wikipedia.org/wiki/Spaghetti_code}} 
+en el que se puede caer muy fácilmente con lenguajes como C ó Java. Python 
+incorpora dentro de su sintaxis aspectos que en otros lenguajes son consejos
+y buenas prácticas de desarrollo. Una función para mostrar las diferencias 
+entre Python y C puede ser la función factorial
+\[
+n! = \left\{
+            \begin{array}{ll}
+                    1              & \mbox{si } n = 0 \\
+                    n\cdot(n-1)! & \mbox{si } n > 0
+            \end{array}
+     \right.
+\]
+
+La implementación de esta función en C puede ser como sigue:
+
+\lstinputlisting[language=C, firstline=1]{factorial.c}
+
+Analizando este código podemos ver aspectos que caracterizan, en este caso, a
+la programación en C. Primero, todas las líneas deben terminar con el símbolo
+{\tt{;}} para indicarle al compilador donde acaba una línea, otro aspecto 
+distintivo de C es el hecho de que es un lenguaje tipado, es decir, debe 
+specificarse a que tipo de dato corresponde cada variable a usar, por ejemplo 
+en las líneas 5, 7, 8, 12 y 14. 
+
+Pero otro par de aspectos de sintaxis fundamentales son los siguientes. 
+En la línea 7, se puede ver que no está identada, es decir, no se uso la 
+popular práctica de programación de usar un tabulador para indicar todas las 
+líneas que pertenecen a un mismo bloque de código. Lo importante es que al ser
+una práctica de programación, el compilador no lanza ningún error por no estar
+identada, simplemente es una petición para procurar que el código sea más 
+legible. El otro aspecto lo podemos ver en la línea 8 donde podemos ver que
+la instrucción {\tt{for}} inicializa una variable, verifica si la condición
+de escape no se ha cumplido y en la sección donde se reevalúa el contador 
+se hace una operación al mismo tiempo sobre la variable resultado. Este tipo
+de prácticas puede hacer el código particularmente difícil de seguir una
+vez que se rebasa un umbral de líneas.
+
+Para poder correr el programa primero hay que compilarlo, algo que caracteriza
+a C:
+
+\begin{verbatim}
+$ gcc factorial.c -std=gnu99 -o factorial
+$ ./factorial
+\end{verbatim}
+
+En cambio en Python, al ser un programa interpretado (lo que significa que 
+podemos acceder al intérprete y ejecutar línea por línea) recibe un 
+{\it{script}} describiendo el programa. Ese programa es el siguiente
+
+\lstinputlisting[language=Python, firstline=1]{fact1.py}
+
+En este código podemos ver que ya no se usan llaves para indicar las 
+instrucciones de una función o de un ciclo for, en vez de eso se ocupa 
+el tabulador para indicar todas las líneas que pertenecen a un bloque de 
+código. Por ejemplo las líneas 6 a la 9 pertenecen a la definición de la línea
+5 y de la 12 a la 14 pertenecen al bloque definido por la línea 11. Es decir,
+el desarrollo de Python incluyó como necesario el uso de tabuladores para
+especificar bloques de código; lo que antes era una buena práctica se convirtió
+en una necesidad de la sintaxis.
+
+Como se puede ver en el código exhibido está el hecho que no es necesario 
+definir un tipo específico para cada variable ni es necesario usar {\tt{;}}
+para especificar el final de la línea. 
+
+La filosofía de Python puede verse desde el intérprete como se muestra a 
+continuación:
+
+\begin{verbatim}
+$ python
+Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
+[GCC 4.9.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import this
+The Zen of Python, by Tim Peters
+
+Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+>>> 
+\end{verbatim}
+
+Otro aspecto que caracteriza a Python es el uso de listas. Una lista es un
+tipo de datos que puede contener más objetos (números, letras, otras listas).
+Al pensar en tener datos en listas podemos pensar en un algoritmo que haga uso
+de esta característica. La implementación la podemos ver en el siguiente 
+segmento de código:
+
+\lstinputlisting[language=Python, firstline=1]{fact2.py}
+
+\subsection{Entrando y saliendo de Python}
+
+Para usar el intérprete de Python existe la distribución Anaconda\footnote{
+\url{https://www.continuum.io/downloads}} para todos los usuario de Windows. 
+Para los usuario de Linux, todas las distribuciones ya incluyen Python como 
+parte integral de la distribución. Una vez instalado, desde la línea de 
+comandos en ambos sistemas operativos podemos llamar a Python de la siguiente
+forma:
+
+\begin{verbatim}
+$ python
+Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
+[GCC 4.9.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 
+\end{verbatim}
+
+El comando desde linux (o windows) se llama python y una vez ejecutado se
+debe mostrar el indicador {\tt{\pythonprompt}} que señala estar a la espera de 
+recibir instrucciones para el lenguaje. Como una nota técnica importante hay 
+que decir que estaremos usando, todavía, la versión 2.7 de Python en vez de la 
+versión 3.5. También estaremos usando el intérprete {\tt{ipython}} que hace 
+más sencillo el uso del lenguaje a través del lenguaje.
+
+\begin{verbatim}
+$ ipython
+Python 2.7.9 (default, Jun 29 2016, 13:08:31) 
+Type "copyright", "credits" or "license" for more information.
+
+IPython 5.1.0 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object', use 'object??' for extra details.
+
+In [1]: 
+\end{verbatim}
+
+\section{Asignación de variables}
+
+Una variable, igual que en cualquier otro lenguaje, es un símbolo que guarda
+un valor especificado. Estos valores pueden ser cualquier cosa desde un número,
+cadena de letras (o simplemente cadena, a partir de la traducción del inglés 
+{\it{string}}), otra lista.
+
+Para instanciar una variable hay que elegir un símbolo que debe empezar con una
+letra y después indicar que valor va a representar. El siguiente diagrama 
+ilustra esto.
+
+\begin{algorithmic}
+\State $a \gets 5$
+\end{algorithmic}
+
+En este caso estamos instanciando, lógicamente, a la variable a con el valor 5. En Python esto se hace de la siguiente forma:
+
+\begin{verbatim}
+>>> a = 5
+>>> a
+5
+>>> 
+\end{verbatim}
+
+En este caso primero guardamos el {\tt{5}} en la variable {\tt{a}} y para
+examinar su valor podemos, simplemente, teclear el nombre de la variable y dar
+enter.
+
+Otro ejemplo de asignación es el que sigue
+
+\begin{algorithmic}
+\State $b \gets ``hola"$
+\end{algorithmic}
+
+En este caso primero guardamos la cadena {\tt{hola}} en la variable {\tt{b}} y 
+para examinar su valor podemos, simplemente, teclear el nombre de la variable 
+y dar enter. En Python:
+
+\begin{verbatim}
+>>> b = "hola"
+>>> b
+'hola'
+>>> 
+\end{verbatim}
+
+En este caso hay que notar dos cosas. En la asignación estamos usando comillas 
+dobles lo que significa que la variable {\tt{b}} va a guardar la secuencia de
+letras {\tt{hola}}. Al imprimirla podemos ver que lo que se imprime en pantalla
+es la leyenda {\tt{'hola'}} encapsulada por unas comillas simples. Para 
+ilustrar la diferencia entre una cadena y una variable numérica podemos hacer
+el siguiente ejercicio para el cual requerimos hacer una suma entre números 
+primero, esto se hace de la siguiente manera
+
+\begin{verbatim}
+>>> 5+55
+60
+>>> 
+\end{verbatim}
+
+Ahora que hemos visto como funciona la suma hagamos el siguiente ejercicio que 
+consta de dos partes, en la primera le asignaremos {\tt{55}} a la variable 
+{\tt{a}} y le sumaremos un {\tt{5}}. En la segunda parte guardaremos la cadena
+{\tt{55}} y le sumaremos el valor {\tt{5}} para observar el resultado de cada
+parte, una después de la otra. En ambos casos primero examineremos el valor
+de la variable {\tt{a}}
+
+\begin{verbatim}
+>>> a=55
+>>> a
+55
+>>> a+5
+60
+>>> a="55"
+>>> a
+'55'
+>>> a+5
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: cannot concatenate 'str' and 'int' objects
+\end{verbatim}
+
+El hecho de que en la última parte del ejercicio este fallara es porque
+quisimo sumar un 5 a una cadena de texto y el lenguaje de programación no 
+tiene definido como hacer esta operación (veremos más adelante que para la
+multiplicación de un texto y un número sí existe una definición explícita).
+Es decir, aunque para nosotros la cadena {\tt{'55'}} se lee como un {\tt{55}}
+al que sabemos sumarle un número {\tt{5}}, el lenguaje no lo sabe, es decir,
+es otro tipo de dato distinto a los números para los cuales sí está definida
+la operación de suma.
+
+Otra cosa que podmeos ver es el hecho de que podemos guardar valores de tipo 
+distintos a una misma variable sin tener que realizar ninguna otra 
+redefinición.
+
+Si queremos guardar una lista tendremos que guardar los elementos que la 
+componen separados por comas ({\tt{,}}) y encerrados entre corchetes cuadrados
+({\tt{[]}}). 
+
+\begin{verbatim}
+>>> L = [1,2,3,4]
+>>> L
+[1, 2, 3, 4]
+>>> 
+\end{verbatim}
+
+La lista {\tt{L}} solo guarda números, si queremos que guarde valores más 
+heterogéneos, por ejemplo, un número, una cadena y una lista lo podemos hacer
+de la siguiente forma.
+
+\begin{verbatim}
+>>> L = [10, "python", [5,6,7]]
+>>> L
+[10, 'python', [5,6,7]]
+>>> 
+\end{verbatim}
+
+Si queremos usar el alguno de estos valores guardados solo tenemos que usar
+el nombre de la lista seguida de unos corchetes cuadrados encerrando el índice
+del elemento a recuperar empezando desde {\tt{0}}. Por ejemplo
+
+\begin{verbatim}
+>>> L[1]
+'python'
+>>>
+>>> L[0]
+10
+>>>
+\end{verbatim}
+
+O bien podemos asignar alguno de esos valores a otra variable
+
+\begin{verbatim}
+>>> c = L[2]
+>>> c
+[5, 6, 7]
+>>>
+\end{verbatim}
+
+Los siguientes son ejemplos fallidos para nombrar una variable
+
+\begin{verbatim}
+>>> 5a = 3
+  File "<stdin>", line 1
+    5a = 3
+     ^
+SyntaxError: invalid syntax
+>>> .a = 3
+  File "<stdin>", line 1
+    .a = 3
+    ^
+\end{verbatim}
+
+\section{Iteración}
+
+\section{Condicionales}
+
+\begin{thebibliography}{9}
+
+\bibitem{wikipython}
+Python (programming language). (2017, February 16). In Wikipedia, The Free
+Encyclopedia. Retrieved 19:43, February 17, 2017, from 
+\url{https://en.wikipedia.org/w/index.php?title=Python_(programming_language)&oldid=765828419}
+
+\bibitem{httlcs}
+Elkner J., Downy A. B., Meyer Chris M. (2017, Febrero 17). 
+How to think like a computer scientist: Learning with Python. 
+Recuperado Febrero 17, 2017 de 
+\url{http://openbookproject.net/thinkcs/python/english2e/}. 
+
+\end{thebibliography}
+\end{document}
