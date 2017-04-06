@@ -22,6 +22,4 @@ for i in range(iters):
     T.append(psig)
 
 for p in T:
-    plt.scatter( p[0], p[1], s=0.2 )
-
-plt.show()
+   print("{0} \t {1}".format(p[0],p[1]))
