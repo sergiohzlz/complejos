@@ -38,13 +38,13 @@ def vecindad(coord,M):
     """
     m,n = M.shape
     x,y = coord
-    #V = [(i,j) for i in (-1,0,1) for j in (-1,0,1)]
-    #V.remove((0,0))
-    #P = [((x+c[0])%m, (y+c[1])%n) for c in V]
-    L = [((x-1)%m,(y-1)%n),(x%m,(y-1)%n),((x+1)%m,(y-1)%n),\
-         ((x-1)%m,y%n),((x+1)%m,y%n),\
-         ((x-1)%m,(y+1)%n),(x%m,(y+1)%n),((x+1)%m,(y+1)%n)]
-    return L
+    V = [(i,j) for i in (-1,0,1) for j in (-1,0,1)]
+    V.remove((0,0))
+    P = [((x+c[0])%m, (y+c[1])%n) for c in V]
+    C = []
+    for p in P:
+        C.append( M[p] )
+    return C
 
 def n_vecinos(V,M,S=[1,2]):
     """
@@ -68,10 +68,28 @@ def n_vecinos(V,M,S=[1,2]):
     {0:1 1: 4, 2: 3}
     """
     D = dict()
-    for coord in V:
-        vecino = M[coord]
+    for vecino in V:
+        #vecino = M[coord]
         D[vecino] = D.get(vecino,0) + 1
     return D
 
+def umbral(V,c,ro, M):
+    """
+    Determina si el vecino en la celda c
+    rebasa el umbral ro en la vecindad V
+    todo en la malla M
+    """
+    t = M[c]
+    D = n_vecinos(V,M)
+    nv = D[t]
+    tv = D[1] + D[2] #total de vecinos 1 y 2
+    u = 1.*nv/tv
+    if u>=ro:
+        return True
+    elif u<ro:
+        return False
 
 
+
+if __name__=='__main__':
+    umbral = float(sys.argv[1])
