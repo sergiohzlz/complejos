@@ -2,6 +2,7 @@
 #-*-coding:utf8-*-
 
 import numpy as np
+import sys
 
 def crea_matriz(dimension, S=[1,2], p=0.9):
     """
@@ -77,19 +78,63 @@ def umbral(V,c,ro, M):
     """
     Determina si el vecino en la celda c
     rebasa el umbral ro en la vecindad V
-    todo en la malla M
+    todo en la malla M.
+    Si el vecino en la celda c rebasa
+    el umbral, regresa True, en caso
+    contrario regresa False.
     """
     t = M[c]
     D = n_vecinos(V,M)
-    nv = D[t]
-    tv = D[1] + D[2] #total de vecinos 1 y 2
+    nv = D.get(t,0)
+    tv = D.get(1,0) + D.get(2,0) #total de vecinos 1 y 2
     u = 1.*nv/tv
     if u>=ro:
         return True
     elif u<ro:
         return False
 
+def reubica(c,V,O,M):
+    """
+    Reubica al vecino M[c] a una de
+    las celdas v en V
+    """
+    jn = np.random.choice(range(len(V)))
+    n = V[jn]
+    t = M[c]
+    M[n] = t
+    M[c] = 0
+    O.remove(n)
+    V.append(c)
+    np.random.shuffle(V)
+    np.random.shuffle(O)
+    return n
 
 
 if __name__=='__main__':
-    umbral = float(sys.argv[1])
+    thrsl  = float(sys.argv[1])
+    dimen  = tuple(map(int, sys.argv[2].split(",")))
+    M,V,O  = crea_matriz(dimen)
+    m,n    = M.shape
+    I = []
+    for i in range(m):
+        for j in range(n):
+            c = (i,j)
+            U = vecindad( c, M )
+            u = umbral(U,c, thrsl, M)
+            if(not u):
+                I.append(c)
+    print("Originales: {0}".format(len(I)))
+    # comenzamos el algoritmo
+    while(len(I)>0):
+        jo = np.random.choice(range(len(O)))
+        o = O[jo]
+        U = vecindad( o, M )
+        u = umbral(U, o, thrsl, M)
+        if(not u):
+            k = reubica(o,V,O,M)
+            U = vecindad( k, M )
+            u = umbral( U, k, thrsl, M )
+            if(not u):
+                I.append(k)
+        print("{0}".format(len(I)))
+
