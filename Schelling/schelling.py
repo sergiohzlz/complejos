@@ -47,7 +47,7 @@ def vecindad(coord,M):
         C.append( M[p] )
     return C
 
-def n_vecinos(V,M,S=[1,2]):
+def n_vecinos(V,M,S=[0,1,2]):
     """
     Determina la proporción de cada tipo de vecino en la vecindad
     V en la matriz M. Los diferentes tipos se especifican en el
@@ -69,12 +69,14 @@ def n_vecinos(V,M,S=[1,2]):
     {0:1 1: 4, 2: 3}
     """
     D = dict()
+    for v in S:
+        D[v] = 0
     for vecino in V:
         #vecino = M[coord]
-        D[vecino] = D.get(vecino,0) + 1
+        D[vecino] += 1
     return D
 
-def umbral(V,c,ro, M):
+def umbral(V,c,ro, M, dbg=False):
     """
     Determina si el vecino en la celda c
     rebasa el umbral ro en la vecindad V
@@ -84,6 +86,7 @@ def umbral(V,c,ro, M):
     contrario regresa False.
     """
     t = M[c]
+    if dbg: print("El vecino: M[{0}] es de tipo {1}".format(c,t))
     D = n_vecinos(V,M)
     nv = D.get(t,0)
     tv = D.get(1,0) + D.get(2,0) #total de vecinos 1 y 2
@@ -93,41 +96,47 @@ def umbral(V,c,ro, M):
     elif u<ro:
         return False
 
-def reubica(c,V,O,M):
+def reubica(c,V,O,M, dbg = False):
     """
     Reubica al vecino M[c] a una de
     las celdas v en V
     """
     jn = np.random.choice(range(len(V)))
     n = V[jn]
+    if dbg: print("Coordenada vacía: V[{0}]={1} ".format(jn,n))
     t = M[c]
     M[n] = t
     M[c] = 0
-    O.remove(n)
-    V.append(c)
+    O.remove(c)
+    V.append(n)
     np.random.shuffle(V)
     np.random.shuffle(O)
     return n
 
+def obten_inconformes(M,th):
+    m, n = M.shape
+    I = []
+    for i in range(m):
+        for j in range(n):
+            c = (i,j)
+            V = vecindad(c,M)
+            u = umbral(V,c,th,M)
+            if not u: I.append( (i,j) )
+    return I
 
 if __name__=='__main__':
     thrsl  = float(sys.argv[1])
     dimen  = tuple(map(int, sys.argv[2].split(",")))
     M,V,O  = crea_matriz(dimen)
     m,n    = M.shape
-    I = []
-    for i in range(m):
-        for j in range(n):
-            c = (i,j)
-            U = vecindad( c, M )
-            u = umbral(U,c, thrsl, M)
-            if(not u):
-                I.append(c)
+    #primero escaneamos los vecinos que no estén
+    #contentos
+    I = obten_inconformes(M,thrsl)
+    np.random.shuffle(I)
     print("Originales: {0}".format(len(I)))
     # comenzamos el algoritmo
     while(len(I)>0):
-        jo = np.random.choice(range(len(O)))
-        o = O[jo]
+        o = I.pop()
         U = vecindad( o, M )
         u = umbral(U, o, thrsl, M)
         if(not u):
@@ -137,4 +146,3 @@ if __name__=='__main__':
             if(not u):
                 I.append(k)
         print("{0}".format(len(I)))
-
