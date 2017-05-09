@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #-*-coding:utf8-*-
-
+import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
@@ -140,11 +140,14 @@ def obten_inconformes(M,th,O):
     return I
 
 if __name__=='__main__':
+    plt.ioff()
     thrsl  = float(sys.argv[1])
     dimen  = tuple(map(int, sys.argv[2].split(",")))
     ro     = float(sys.argv[3])
     M,V,O  = crea_matriz(dimen, p=ro)
-    print(M)
+    f,ax = plt.subplots(nrows=1, ncols=1)
+    plt.pcolor(M)
+    plt.savefig('schelling_0.png')
     m,n    = M.shape
     #primero escaneamos los vecinos que no estén
     #contentos
@@ -154,13 +157,12 @@ if __name__=='__main__':
     # comenzamos el algoritmo
     while(len(I)>0):
         o = I.pop()
-        W = vecindad( o, M )
-        u = umbral(W, o, thrsl, M)
+        k = reubica(o,V,O,M)
+        U = vecindad( k, M )
+        u = umbral( U, k, thrsl, M )
         if(not u):
-            k = reubica(o,V,O,M)
-            U = vecindad( k, M )
-            u = umbral( U, k, thrsl, M )
-            if(not u):
-                I.append(k)
+            I.append(k)
         #print("{0}".format(len(I)))
-    print(M)
+    f,ax = plt.subplots(nrows=1, ncols=1)
+    plt.pcolor(M)
+    plt.savefig('schelling_2.png')
