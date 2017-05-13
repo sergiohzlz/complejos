@@ -32,7 +32,7 @@ def crea_matriz(dimension, S=[1,2], p=0.9, dbg=False):
         print(map(str,O))
     return Z,V,O
 
-def vecindad(coord,M):
+def vecindad(coord,M,tipo='toro'):
     """
     Recupera la vecindad de Moore de la coordenada coord
     en el parámetro en la matriz M y regresa las coordenadas
@@ -45,7 +45,11 @@ def vecindad(coord,M):
     x,y = coord
     V = [(i,j) for i in (-1,0,1) for j in (-1,0,1)]
     V.remove((0,0))
-    P = [((x+c[0])%m, (y+c[1])%n) for c in V]
+    if(tipo=='toro'):
+        P = [((x+c[0])%m, (y+c[1])%n) for c in V]
+    elif(tipo=='fija'):
+        if(coord==(0,0) or coord==(m-1,n-1) or coord==(0,n-1) or coord==(m-1,0)):
+            pass
     C = []
     for p in P:
         C.append( M[p] )
