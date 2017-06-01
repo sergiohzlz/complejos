@@ -6,27 +6,28 @@ from pylab import *
 import matplotlib
 matplotlib.use('TkAgg')
 from matplotlib import pyplot as plt
+plt.style.use('ggplot')
 
-def logistic(x0,r, n=1000):
+def logistica(x0,r, n=1000):
     L = [x0]
     for i in range(n):
         x_act = L[-1]
         L.append(r*x_act*(1-x_act))
     return L
 
-def bifmap(x0,rango,step,n,k):
-    print "x0 ",x0
-    print "rango ",rango[0]," - ",rango[1]
+def bifurcaciones(x0,rango,step,n,k):
+    print("x0 ",x0)
+    print("rango ",rango[0]," - ",rango[1])
     R = arange(rango[0],rango[1],step)
-    m =(rango[1]-rango[0])/step 
-    m *= (n-k) 
+    m =(rango[1]-rango[0])/step
+    m *= (n-k)
     m += (n-k)
-    S = zeros((m,2)) 
-    print S.shape
+    S = zeros((int(m),2))
+    print(S.shape)
     i,j=0,0
     for r in R:
         #print "r {0}".format(r)
-        L = logistic(x0,r,n)
+        L = logistica(x0,r,n)
         for p in L[k+1:]:
             S[i]=(r,p)
             i += 1
@@ -40,7 +41,7 @@ if __name__=='__main__':
     rango = [inicio, fin]
     iters = 500
     #x0 = 0.2
-    S = bifmap(x0, rango,0.001,iters,200)
+    S = bifurcaciones(x0, rango,0.001,iters,200)
     fig = figure()
     title('Bifurcaciones para el rango '+str(rango))
     xlim(tuple(rango))

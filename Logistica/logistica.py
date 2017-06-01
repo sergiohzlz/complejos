@@ -11,7 +11,7 @@ def logistica(x0, r, n=1000):  #observen que estoy inicializando n con un valor 
     x0: punto inicial, flotante
     r:  constante de carga, flotante
     n:  duración, entero
-    
+
     Regresa
     Una lista con toda la evolución
     """
@@ -21,23 +21,13 @@ def logistica(x0, r, n=1000):  #observen que estoy inicializando n con un valor 
         xsig = xact*r*(1-xact) #punto siguiente
         L.append(xsig)         #lo ponemos en la lista para que sea tomado en la siguiente iteración
     return L
-    
-def mapeo(parametros):
-    """
-    Función mapeo. Esta función la deben implementar
-    y debe recibir algunos parámetros que ustedes deben
-    determinar para luego llamar a la función logística, recibir
-    las iteraciones, desechar el transitorio y luego quedarse 
-    con los puntos restantes, todo esto para cada valor de r
-    que deberán ir variando entre 2 y 4
-    """
-    pass
-    
+
+
 if __name__=='__main__':
     x0 = float(sys.argv[1]) #leemos el parámetro x0
     r  = float(sys.argv[2]) #leemos el parámetro r
     n  = int(sys.argv[3])   #leemos las iteraciones
-    
+
     iteraciones = logistica(x0, r, n)
     for val in iteraciones:
         print val
