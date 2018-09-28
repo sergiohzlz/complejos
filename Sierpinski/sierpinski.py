@@ -1,5 +1,6 @@
 from random import choice
 from matplotlib import pyplot as plt
+from numpy import array
 
 
 v1 = (0.,0.)
@@ -12,7 +13,7 @@ T = [p0]
 
 pmedio = lambda x,y: ( (x[0]+y[0])/2 , (x[1]+y[1])/2 )
 
-iters = 100000
+iters = 1000000
 
 for i in range(iters):
     idx = choice([0,1,2])
@@ -21,5 +22,9 @@ for i in range(iters):
     psig = pmedio(pact,vact)
     T.append(psig)
 
-for p in T:
-   print("{0} \t {1}".format(p[0],p[1]))
+#for p in T:
+#   print("{0} \t {1}".format(p[0],p[1]))
+
+T = array(T)
+plt.scatter(T[:,0], T[:,1], s=0.1)
+plt.show()
