@@ -4,24 +4,24 @@ from mpl_toolkits.mplot3d.axes3d import Axes3D
 
 def lv(r, alfa=0.4, beta=0.018, gamma=0.8, delta=0.023):
     (x, y) = r
-    # Sistema de lorenz
     dp_dt = alfa*x - beta*x*y
     dd_dt = -gamma*y + delta*x*y
 
     return [dp_dt, dd_dt]
 
 def euler(f, r0, h, N):
-    P = zeros((N,2))
+    k = len(r0)
+    P = zeros((N,k))
     P[0] = r0
     for i in range(1,N):
         pa = P[i-1]
-        P[i] = P[i-1] + h*array(f(pa))
+        P[i] = pa + h*array(f(pa))
     return P
 
 
 
 # Posicion inicial
-r0 = [30, 4]
+r0 = [30, 1]
 
 #Intervalo de tiempo
 tf = 100.0
@@ -40,14 +40,17 @@ y = pos[:, 1]
 fig1 = figure(1)
 plot(x, y)
 title('Lotka - Volterra')
+xlabel('presa')
+ylabel('depredador')
+
 savefig('lv1.pdf')
 
 #
 fig2 = figure(2)
 plot(t,x,t,y)
+#label(['presa','depredador'],[x[0],y[0]])
 
 savefig('serieslv.pdf')
-
 
 
 show()
