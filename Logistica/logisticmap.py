@@ -42,6 +42,10 @@ if __name__=='__main__':
     iters = 500
     #x0 = 0.2
     S = bifurcaciones(x0, rango,0.001,iters,200)
+    f = open('salida.dat','w')
+    for s in S:
+        f.write(str(s[0]) +'\t' + str(s[1]) + '\n')
+    f.close()
     fig = figure()
     title('Bifurcaciones para el rango '+str(rango))
     xlim(tuple(rango))
